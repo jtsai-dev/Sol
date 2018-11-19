@@ -77,6 +77,7 @@
     <Compile Include="SZWaterService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\init.sql" />
     <None Include="App.config" />
     <Content Include="log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
