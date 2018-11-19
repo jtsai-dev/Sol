@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dapper" Version="1.50.5" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.8.10" />
+    <PackageReference Include="MySql.Data" Version="8.0.13" />
+    <PackageReference Include="quartz" Version="3.0.7" />
+    <PackageReference Include="topshelf" Version="4.1.0" />
+  </ItemGroup>
+
+</Project>
