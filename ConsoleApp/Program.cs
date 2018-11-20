@@ -47,6 +47,7 @@ namespace ConsoleApp
             //PermissionTest();
             //CastleTest();
         }
+
         public static void MassTransitTTest()
         {
             var bus = Bus.Factory.CreateUsingRabbitMq((config) =>
