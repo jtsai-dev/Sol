@@ -8,12 +8,168 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
-            //MaxDepth(tree);
+            NextPermutation(new int[] { 3,2,1 });
+            //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
+            //var tree = new TreeNode(4)
+            //{
+            //    left = new TreeNode(2)
+            //    {
+            //        left = new TreeNode(1),
+            //        right = new TreeNode(3)
+            //    },
+            //    right = new TreeNode(7)
+            //    {
+            //        left = new TreeNode(6),
+            //        right = new TreeNode(9)
+            //    }
+            //};
+            //InvertTree(tree);
             //Console.WriteLine(CheckRecord("PPALLP"));
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
             Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
+        }
+
+        // 31--
+        public static void NextPermutation(int[] nums)
+        {
+            var flag = false;
+            for (var i = nums.Length - 1; i > 0; i--)
+            {
+                if (nums[i] > nums[i - 1])
+                {
+                    var temp = nums[i];
+                    nums[i] = nums[i - 1];
+                    nums[i - 1] = temp;
+                    flag = true;
+                }
+            }
+            if (!flag)
+            {
+                for (var i = 0; i < nums.Length - 1; i++)
+                {
+                    for (var j = i + 1; j < nums.Length; j++)
+                    {
+                        if (nums[i] > nums[j])
+                        {
+                            var temp = nums[i];
+                            nums[i] = nums[j];
+                            nums[j] = temp;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 11
+        public int MaxArea(int[] height)
+        {
+            var max = 0;
+            for (var i = 0; i < height.Length - 1; i++)
+            {
+                for (var j = i + 1; j < height.Length; j++)
+                {
+                    var area = (j - i) * (height[i] < height[j] ? height[i] : height[j]);
+                    max = max < area ? area : max;
+                }
+            }
+            return max;
+        }
+
+        // 226
+        public static TreeNode InvertTree(TreeNode root)
+        {
+            if (root == null) return root;
+
+            var row = new List<TreeNode>() { root };
+            while (row.Count() > 0)
+            {
+                var newRow = new List<TreeNode>();
+                row.ForEach(p =>
+                {
+                    if (p?.left != null)
+                    {
+                        newRow.Add(p.left);
+                    }
+                    if (p?.right != null)
+                    {
+                        newRow.Add(p.right);
+                    }
+
+                    var temp = p.left;
+                    p.left = p.right;
+                    p.right = temp;
+
+                    row = newRow;
+                });
+            }
+            return root;
+        }
+
+        // 101
+        public static bool IsSymmetric(TreeNode root)
+        {
+            if (root == null) return true;
+            var row = new List<TreeNode>() { root };
+            while (row.Count() > 0 && !row.All(p => p == null))
+            {
+                var nums = new List<int?>();
+                var reverse = new List<int?>();
+                var newRow = new List<TreeNode>();
+                row.ForEach(p =>
+                {
+                    if (p?.left != null)
+                    {
+                        nums.Add(p.left.val);
+                        reverse.Insert(0, p.left.val);
+                        newRow.Add(p.left);
+                    }
+                    else
+                    {
+                        nums.Add(null);
+                        reverse.Insert(0, null);
+                    }
+
+                    if (p?.right != null)
+                    {
+                        nums.Add(p.right.val);
+                        reverse.Insert(0, p.right.val);
+                        newRow.Add(p.right);
+                    }
+                    else
+                    {
+                        nums.Add(null);
+                        reverse.Insert(0, null);
+                    }
+                });
+
+                row = newRow;
+                if (!nums.SequenceEqual(reverse))
+                    return false;
+            }
+            return true;
+        }
+
+        // 637
+        public static IList<double> AverageOfLevels(TreeNode root)
+        {
+            var r = new List<double>();
+            if (root == null) return r;
+            var list = new List<TreeNode>() { root };
+            while (list.Count() > 0)
+            {
+                r.Add(list.Sum(p => (double)p.val) / list.Count());
+                var temp = new List<TreeNode>();
+                list.ForEach(p =>
+                {
+                    if (p.left != null)
+                        temp.Add(p.left);
+                    if (p.right != null)
+                        temp.Add(p.right);
+                    list = temp;
+                });
+            }
+            return r;
         }
 
         // 104
@@ -53,34 +209,34 @@ namespace LeetCode
         // 102
         public static IList<IList<int>> LevelOrder(TreeNode root)
         {
-            var nums = new List<IList<int>>();
-            if (root == null) return nums;
-            nums.Add(new List<int>() { root.val });
-            IList<int> row = new List<int>();
-            GetNextLevel(new List<TreeNode>() { root }, nums);
-            return nums;
-        }
-        public static void GetNextLevel(List<TreeNode> trees, List<IList<int>> nums)
-        {
-            var nodes = new List<TreeNode>();
-            var temp = new List<int>();
-            trees.ForEach(p =>
+            var r = new List<IList<int>>();
+            if (root == null) return r;
+            r.Add(new List<int>() { root.val });
+
+            var row = new List<TreeNode>() { root };
+            while (row.Count() > 0)
             {
-                if (p.left != null)
+                var nums = new List<int>();
+                var temp = new List<TreeNode>();
+                row.ForEach(p =>
                 {
-                    nodes.Add(p.left);
-                    temp.Add(p.left.val);
-                }
-                if (p.right != null)
-                {
-                    nodes.Add(p.right);
-                    temp.Add(p.right.val);
-                }
-            });
-            if (temp.Count() > 0)
-                nums.Add(temp);
-            if (nodes.Count() > 0)
-                GetNextLevel(nodes, nums);
+                    if (p.left != null)
+                    {
+                        nums.Add(p.left.val);
+                        temp.Add(p.left);
+                    }
+                    if (p.right != null)
+                    {
+                        nums.Add(p.right.val);
+                        temp.Add(p.right);
+                    }
+                });
+                if (nums.Count() > 0)
+                    r.Add(nums);
+                row = temp;
+            }
+
+            return r;
         }
 
         // 551
