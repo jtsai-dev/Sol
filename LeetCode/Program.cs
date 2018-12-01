@@ -8,7 +8,8 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            NextPermutation(new int[] { 3,2,1 });
+            Console.WriteLine(AddBinary("1010", "1011"));
+            //NextPermutation(new int[] { 3, 2, 1 });
             //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
             //var tree = new TreeNode(4)
             //{
@@ -28,6 +29,48 @@ namespace LeetCode
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
             Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
+        }
+
+        // 67--
+        public static string AddBinary(string a, string b)
+        {
+            Int64 r = 0;
+            r = Convert.ToInt64(a, 2) + Convert.ToInt64(b, 2);
+            return Convert.ToString(r, 2);
+        }
+
+        // 25
+        public class ListNode
+        {
+            public int val;
+            public ListNode next;
+            public ListNode(int x) { val = x; }
+        }
+        public static ListNode ReverseKGroup(ListNode head, int k)
+        {
+            var list = new List<int>();
+            while (head != null)
+            {
+                list.Add(head.val);
+                head = head.next;
+            }
+            var nums = new List<int>();
+            for (var i = 0; i < Math.Ceiling((double)list.Count / k); i++)
+            {
+                var temp = list.Skip(i * k).Take(k);
+                if (temp.Count() == k)
+                {
+                    temp = temp.Reverse();
+                }
+                nums.AddRange(temp);
+            }
+            nums.Reverse();
+            ListNode r = null;
+            foreach (var item in nums)
+            {
+                r = new ListNode(item) { next = r };
+            }
+            return r;
         }
 
         // 31--
