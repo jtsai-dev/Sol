@@ -1,20 +1,19 @@
 ﻿using HtmlAgilityPack;
-using MySql.Data.MySqlClient;
+using RentSpider.Entities;
+using RentSpider.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using Dapper;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Timers;
 
-namespace RentSpider
+namespace RentSpider.Services
 {
-    public class RentSummaryUtilities
+    public class RentSummaryService
     {
+        private static RentSummaryRepository _rentSummaryRepository = new RentSummaryRepository();
+
         public void GetNotice()
         {
             var list = GetList();
@@ -75,7 +74,8 @@ namespace RentSpider
             }
         }
 
-        private static readonly string listUrl = "https://www.douban.com/group/512844";
+        private static readonly string listUrl = ConfigurationManager.AppSettings.Get("TargetUrl");
+        private static readonly string[] keys = ConfigurationManager.AppSettings.Get("KeyWords").Split('|');
         private static List<RentSummary> GetList()
         {
             List<RentSummary> items = new List<RentSummary>();
@@ -93,13 +93,12 @@ namespace RentSpider
                     var titleNode = tds[0].SelectNodes(".//a[@href]").FirstOrDefault();
                     //var title = titleNode.InnerText.Replace("&nbsp;", "").Trim();
                     var title = titleNode?.Attributes["title"]?.Value.TrimEnd('/');
-                    var keys = new string[] { "两房", "2房", "两室", "2室" };
                     if (keys.Any(p => title.Contains(p)))
                     {
                         var author = tds[1].InnerText.Replace("\\", "");
                         var url = titleNode?.Attributes["href"]?.Value.TrimEnd('/');
                         var id = Convert.ToInt32(url.Substring(url.LastIndexOf('/') + 1));
-                        if (!CheckExist(id))
+                        if (_rentSummaryRepository.Query(id) == null)
                         {
                             var rentSummary = new RentSummary()
                             {
@@ -109,7 +108,7 @@ namespace RentSpider
                                 Author = author,
                             };
                             items.Add(rentSummary);
-                            Insert(rentSummary);
+                            _rentSummaryRepository.Insert(rentSummary);
                         }
                     }
                 }
@@ -117,45 +116,5 @@ namespace RentSpider
 
             return items;
         }
-
-        private static bool CheckExist(int id)
-        {
-            using (IDbConnection conn = OpenConnection())
-            {
-                const string query = "SELECT * from RentSummary WHERE Id = @id";
-                var rentSummary = conn.Query<RentSummary>(query, new { id = id }).FirstOrDefault();
-                return (rentSummary != null);
-            }
-        }
-
-        private static bool Insert(RentSummary rentSummary)
-        {
-            using (IDbConnection conn = OpenConnection())
-            {
-                const string query = "INSERT INTO rentsummary(Id, Title, Author, Url) VALUES(@id, @title, @author, @url)";
-                int row = conn.Execute(query, rentSummary);
-                return row > 0;
-            }
-        }
-
-        private static MySqlConnection _connection;
-        private static MySqlConnection OpenConnection()
-        {
-            if (_connection == null)
-            {
-                _connection = new MySqlConnection($"Server=127.0.0.1;Port=3306;Uid=root;Pwd=123asD;DataBase=RentSpider;Convert Zero Datetime=True; allow zero datetime=true;Max Pool Size=10000;Allow User Variables=True");
-            }
-            if (_connection.State == ConnectionState.Closed)
-                _connection.Open();
-            return _connection;
-        }
-    }
-
-    public class RentSummary
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string Url { get; set; }
     }
 }
