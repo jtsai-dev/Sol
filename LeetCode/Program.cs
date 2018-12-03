@@ -8,7 +8,17 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            NextPermutation(new int[] { 3,2,1 });
+            Console.WriteLine(ConsecutiveNumbersSum(5));
+            //ArrayPairSum(new int[] { 1, 4, 3, 2 });
+            //var matrix = new NumMatrix(new int[5, 5] {
+            //    { 3,0,1,4,2},
+            //    { 5,6,3,2,1},
+            //    { 1,2,0,1,5},
+            //    { 4,1,0,1,7},
+            //    { 1,0,3,0,5},
+            //});
+            //Console.WriteLine(matrix.SumRegion(2, 1, 4, 3));
+            //NextPermutation(new int[] { 3, 2, 1 });
             //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
             //var tree = new TreeNode(4)
             //{
@@ -27,7 +37,83 @@ namespace LeetCode
             //Console.WriteLine(CheckRecord("PPALLP"));
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
-            Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
+            //Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
+        }
+
+        // 829--
+        public static int ConsecutiveNumbersSum(int N)
+        {
+            var end = N % 2 == 1 ? (N + 1) / 2 : N / 2;
+            var tick = 1;
+            for (var i = 1; i < end; i++)
+            {
+                for(var j = i + 1; j <= end; j++)
+                {
+                    if ((i + j) * (j - i + 1) / 2 == N)
+                        tick++;
+                }
+            }
+            return tick;
+        }
+
+        // 844
+        public static bool BackspaceCompare(string S, string T)
+        {
+            Func<string, string> func = (str) =>
+            {
+                var r = "";
+                for (var i = 0; i < str.Length; i++)
+                {
+                    if (str[i] != '#')
+                        r += str[i];
+                    else if (r.Length > 0)
+                        r = r.Substring(0, r.Length - 1);
+                }
+                return r;
+            };
+            return func(S.TrimStart('#')) == func(T.TrimStart('#'));
+        }
+
+        // 561
+        public static int ArrayPairSum(int[] nums)
+        {
+            var list = nums.OrderBy(p => p).ToList();
+            var sum = 0;
+            for (var i = 0; i < list.Count(); i += 2)
+            {
+                sum += list[i];
+            }
+            return sum;
+        }
+
+        // 137
+        public static int SingleNumber(int[] nums)
+        {
+            return nums.GroupBy(p => p).First(p => p.Count() == 1).Key;
+        }
+
+        // 304--
+        public class NumMatrix
+        {
+            private int[,] _matrix;
+            public NumMatrix(int[,] matrix)
+            {
+                _matrix = matrix;
+            }
+
+            public int SumRegion(int row1, int col1, int row2, int col2)
+            {
+                var sum = 0;
+                for (var r = row1; r <= row2; r++)
+                {
+                    for (var c = col1; c <= col2; c++)
+                    {
+                        sum += _matrix[r, c];
+                    }
+                }
+
+                return sum;
+            }
         }
 
         // 31--

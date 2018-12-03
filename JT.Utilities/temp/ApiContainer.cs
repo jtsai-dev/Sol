@@ -1,4 +1,3 @@
-using JT.Infrastructure.Log;
 using System;
 using System.IO;
 using System.Linq;
@@ -88,6 +87,7 @@ namespace JT.Infrastructure
         {
             return TryCatch<object>(() =>
             {
+                //_client.PostAsync(requestUri, new StringContent(param));
                 return _client.PostAsJsonAsync(requestUri, param).Result;
             });
         }
@@ -151,7 +151,7 @@ namespace JT.Infrastructure
         //private ApiResult<object> ApiResultHandler(HttpResponseMessage response)
         //{
         //    return ApiResultHandler<object>(response);
-            
+
         //    //if (response.StatusCode == System.Net.HttpStatusCode.OK)
         //    //{
         //    //    return response.Content.ReadAsAsync<ApiResult>().Result;
@@ -218,7 +218,7 @@ namespace JT.Infrastructure
             }
             catch (AggregateException ex)
             {
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 return new ApiResult<T>()
                 {
                     IsSuccess = false,
@@ -227,7 +227,7 @@ namespace JT.Infrastructure
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 return new ApiResult<T>()
                 {
                     IsSuccess = false,
