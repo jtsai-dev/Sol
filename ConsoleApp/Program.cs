@@ -26,7 +26,6 @@ using HtmlAgilityPack;
 using System.Web;
 using System.Reflection;
 using AutoMapper;
-using JT.Infrastructure.AppCommon;
 using System.Drawing;
 using System.Drawing.Imaging;
 using RabbitMQ.Client;

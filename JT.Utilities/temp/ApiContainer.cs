@@ -87,8 +87,9 @@ namespace JT.Infrastructure
         {
             return TryCatch<object>(() =>
             {
-                //_client.PostAsync(requestUri, new StringContent(param));
-                return _client.PostAsJsonAsync(requestUri, param).Result;
+                return _client.PostAsync(
+                    requestUri,
+                    new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(param))).Result;
             });
         }
 
@@ -96,7 +97,9 @@ namespace JT.Infrastructure
         {
             return TryCatch<T>(() =>
             {
-                return _client.PostAsJsonAsync(requestUri, param).Result;
+                return _client.PostAsync(
+                    requestUri,
+                    new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(param))).Result;
             });
         }
 
@@ -136,7 +139,8 @@ namespace JT.Infrastructure
         {
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return response.Content.ReadAsAsync<ApiResult<T>>().Result;
+                //return response.Content.ReadAsAsync<ApiResult<T>>().Result;
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResult<T>>(response.Content.ReadAsStringAsync().Result);
             }
             else
             {
