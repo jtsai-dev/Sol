@@ -8,16 +8,6 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(ConsecutiveNumbersSum(5));
-            //ArrayPairSum(new int[] { 1, 4, 3, 2 });
-            //var matrix = new NumMatrix(new int[5, 5] {
-            //    { 3,0,1,4,2},
-            //    { 5,6,3,2,1},
-            //    { 1,2,0,1,5},
-            //    { 4,1,0,1,7},
-            //    { 1,0,3,0,5},
-            //});
-            //Console.WriteLine(matrix.SumRegion(2, 1, 4, 3));
             //NextPermutation(new int[] { 3, 2, 1 });
             //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
             //var tree = new TreeNode(4)
@@ -37,83 +27,49 @@ namespace LeetCode
             //Console.WriteLine(CheckRecord("PPALLP"));
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
-            //Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
+        }
+        
+
+        // 67--
+        public static string AddBinary(string a, string b)
+        {
+            Int64 r = 0;
+            r = Convert.ToInt64(a, 2) + Convert.ToInt64(b, 2);
+            return Convert.ToString(r, 2);
         }
 
-        // 829--
-        public static int ConsecutiveNumbersSum(int N)
+        // 25
+        public class ListNode
         {
-            var end = N % 2 == 1 ? (N + 1) / 2 : N / 2;
-            var tick = 1;
-            for (var i = 1; i < end; i++)
+            public int val;
+            public ListNode next;
+            public ListNode(int x) { val = x; }
+        }
+        public static ListNode ReverseKGroup(ListNode head, int k)
+        {
+            var list = new List<int>();
+            while (head != null)
             {
-                for(var j = i + 1; j <= end; j++)
+                list.Add(head.val);
+                head = head.next;
+            }
+            var nums = new List<int>();
+            for (var i = 0; i < Math.Ceiling((double)list.Count / k); i++)
+            {
+                var temp = list.Skip(i * k).Take(k);
+                if (temp.Count() == k)
                 {
-                    if ((i + j) * (j - i + 1) / 2 == N)
-                        tick++;
+                    temp = temp.Reverse();
                 }
+                nums.AddRange(temp);
             }
-            return tick;
-        }
-
-        // 844
-        public static bool BackspaceCompare(string S, string T)
-        {
-            Func<string, string> func = (str) =>
+            nums.Reverse();
+            ListNode r = null;
+            foreach (var item in nums)
             {
-                var r = "";
-                for (var i = 0; i < str.Length; i++)
-                {
-                    if (str[i] != '#')
-                        r += str[i];
-                    else if (r.Length > 0)
-                        r = r.Substring(0, r.Length - 1);
-                }
-                return r;
-            };
-            return func(S.TrimStart('#')) == func(T.TrimStart('#'));
-        }
-
-        // 561
-        public static int ArrayPairSum(int[] nums)
-        {
-            var list = nums.OrderBy(p => p).ToList();
-            var sum = 0;
-            for (var i = 0; i < list.Count(); i += 2)
-            {
-                sum += list[i];
+                r = new ListNode(item) { next = r };
             }
-            return sum;
-        }
-
-        // 137
-        public static int SingleNumber(int[] nums)
-        {
-            return nums.GroupBy(p => p).First(p => p.Count() == 1).Key;
-        }
-
-        // 304--
-        public class NumMatrix
-        {
-            private int[,] _matrix;
-            public NumMatrix(int[,] matrix)
-            {
-                _matrix = matrix;
-            }
-
-            public int SumRegion(int row1, int col1, int row2, int col2)
-            {
-                var sum = 0;
-                for (var r = row1; r <= row2; r++)
-                {
-                    for (var c = col1; c <= col2; c++)
-                    {
-                        sum += _matrix[r, c];
-                    }
-                }
-
-                return sum;
-            }
+            return r;
         }
 
         // 31--
