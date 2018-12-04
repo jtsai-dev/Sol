@@ -31,6 +31,18 @@ namespace LeetCode
             Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
         }
 
+        // 118
+        public static IList<IList<int>> Generate(int numRows)
+        {
+            var r = new List<IList<int>>();
+            for(var i = 0; i < numRows; i++)
+            {
+                var temp = new List<int>();
+                //if(i)
+            }
+            return r;
+        }
+
         // 67--
         public static string AddBinary(string a, string b)
         {
