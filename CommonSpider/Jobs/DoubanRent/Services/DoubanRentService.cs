@@ -2,6 +2,7 @@
 using CommonSpider.Jobs.DoubanRent.Entities;
 using CommonSpider.Jobs.DoubanRent.Repositories;
 using HtmlAgilityPack;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace CommonSpider.Jobs.DoubanRent.Services
 {
     public class DoubanRentService : IService
     {
+        private static ILog _logger;
         private Dictionary<string, object> _data;
 
         private static string[] _keys;
@@ -19,6 +21,7 @@ namespace CommonSpider.Jobs.DoubanRent.Services
 
         public void Init(string targetUrl, Dictionary<string, object> data)
         {
+            _logger = LogManager.GetLogger(typeof(DoubanRentService));
             _data = data;
             _keys = _data["keys"].ToString().Split('|');
             var list = GetList(targetUrl);
@@ -75,7 +78,7 @@ namespace CommonSpider.Jobs.DoubanRent.Services
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex);
             }
         }
         

@@ -1,4 +1,5 @@
 ﻿using CommonSpider.Jobs;
+using log4net;
 using Quartz;
 using Quartz.Impl;
 using System;
@@ -9,9 +10,11 @@ namespace CommonSpider
 {
     class TopService : ServiceControl
     {
-        private List<Model.JobDescription> _jobs { get; set; }
+        private static ILog _logger;
+        private static List<Model.JobDescription> _jobs { get; set; }
         public TopService(List<Model.JobDescription> jobs)
         {
+            _logger = LogManager.GetLogger(typeof(TopService));
             _jobs = jobs;
         }
 
@@ -19,11 +22,12 @@ namespace CommonSpider
         {
             try
             {
+                _logger.Info("service start");
                 InitSchedulerJob();
             }
             catch (Exception ex)
             {
-
+                _logger.Error(ex);
             }
             return true;
         }
@@ -53,7 +57,7 @@ namespace CommonSpider
                 dataMap.Add("Service", p.Service);
                 dataMap.Add("Data", p.Data);
 
-                IJobDetail job = JobBuilder.Create<CommonJob>()
+                IJobDetail job = JobBuilder.Create<BaseJob>()
                                 .WithIdentity(p.Name, p.Group)
                                 .UsingJobData(dataMap)
                                 .Build();
@@ -67,6 +71,7 @@ namespace CommonSpider
             });
             return result;
         }
+
         private ITrigger GenerateTrigger(string cronStr, string name, string group)
         {
             ITrigger trigger = TriggerBuilder.Create()

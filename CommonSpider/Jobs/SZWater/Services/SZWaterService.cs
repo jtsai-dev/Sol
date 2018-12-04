@@ -2,6 +2,7 @@
 using CommonSpider.Jobs.SZWater.Entities;
 using CommonSpider.Jobs.SZWater.Repositories;
 using HtmlAgilityPack;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace CommonSpider.Jobs.SZWater.Services
 {
     public class SZWaterService : IService
     {
+        private static ILog _logger;
         private Dictionary<string, object> _data;
 
         private static string _detailUrl;
@@ -20,6 +22,7 @@ namespace CommonSpider.Jobs.SZWater.Services
 
         public void Init(string targetUrl, Dictionary<string, object> data)
         {
+            _logger = LogManager.GetLogger(typeof(SZWaterService));
             _data = data;
             _detailUrl = _data["detailUrl"].ToString();
 
@@ -95,6 +98,7 @@ pre{
             }
             catch (Exception ex)
             {
+                _logger.Error(ex);
             }
         }
 

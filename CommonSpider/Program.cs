@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Topshelf;
 using System.Linq;
-using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 
 namespace CommonSpider
 {
@@ -11,6 +11,8 @@ namespace CommonSpider
     {
         static void Main(string[] args)
         {
+            new LoggerFactory().AddLog4Net();
+
             HostFactory.Run(host =>
             {
                 host.SetServiceName("CommonSpider");

@@ -1,11 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Text;
 
-namespace CommonSpider
+namespace CommonSpider.Jobs
 {
     public class BaseRepository
     {

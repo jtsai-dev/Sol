@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs
 {
-    public class CommonJob : IJob
+    public class BaseJob : IJob
     {
         Task IJob.Execute(IJobExecutionContext context)
         {

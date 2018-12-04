@@ -1,7 +1,5 @@
 ﻿using CommonSpider.Jobs.SZWater.Entities;
 using Dapper;
-using MySql.Data.MySqlClient;
-using System.Configuration;
 using System.Data;
 using System.Linq;
 
