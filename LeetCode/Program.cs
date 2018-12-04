@@ -8,7 +8,6 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(AddBinary("1010", "1011"));
             //NextPermutation(new int[] { 3, 2, 1 });
             //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
             //var tree = new TreeNode(4)
@@ -28,20 +27,8 @@ namespace LeetCode
             //Console.WriteLine(CheckRecord("PPALLP"));
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
-            Console.WriteLine(FirstMissingPositive(new int[] { 7, 8, 9, 11, 12 }));
         }
-
-        // 118
-        public static IList<IList<int>> Generate(int numRows)
-        {
-            var r = new List<IList<int>>();
-            for(var i = 0; i < numRows; i++)
-            {
-                var temp = new List<int>();
-                //if(i)
-            }
-            return r;
-        }
+        
 
         // 67--
         public static string AddBinary(string a, string b)
