@@ -1,11 +1,7 @@
-﻿using JT.Infrastructure.Log;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -120,18 +116,10 @@ namespace JT.Infrastructure
         /// <returns></returns>
         public static object Deserialize<T>(string xml)
         {
-            try
+            using (StringReader sr = new StringReader(xml))
             {
-                using (StringReader sr = new StringReader(xml))
-                {
-                    XmlSerializer xmldes = new XmlSerializer(typeof(T));
-                    return xmldes.Deserialize(sr);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return null;
+                XmlSerializer xmldes = new XmlSerializer(typeof(T));
+                return xmldes.Deserialize(sr);
             }
         }
 
@@ -162,15 +150,7 @@ namespace JT.Infrastructure
         {
             MemoryStream Stream = new MemoryStream();
             XmlSerializer xml = new XmlSerializer(typeof(T));
-            try
-            {
-                xml.Serialize(Stream, obj);
-            }
-            catch (InvalidOperationException e)
-            {
-                Logger.Error(e);
-                throw e;
-            }
+            xml.Serialize(Stream, obj);
             Stream.Position = 0;
             StreamReader sr = new StreamReader(Stream);
             string str = sr.ReadToEnd();

@@ -1,16 +1,17 @@
 ﻿using Quartz;
 using Quartz.Impl;
+using RentSpider.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Configuration;
 using Topshelf;
 
 namespace RentSpider
 {
     class Program
     {
-        private static int _intervalInMinutes = 5;
+        private static int _intervalInMinutes = Convert.ToInt32(ConfigurationManager.AppSettings.Get("IntervalInMinutes"));
         static void Main(string[] args)
         {
             HostFactory.Run(host =>
@@ -43,7 +44,7 @@ namespace RentSpider
             {
                 return true;
             }
-                        
+
             private async void InitSchedulerJob()
             {
                 var _scheduler = await new StdSchedulerFactory().GetScheduler();
@@ -73,17 +74,6 @@ namespace RentSpider
                     .Build();
 
                 return trigger;
-            }
-        }
-
-        public class SyncRentSummaryJob : IJob
-        {
-            Task IJob.Execute(IJobExecutionContext context)
-            {
-                return Task.Factory.StartNew(() =>
-                {
-                    new RentSummaryUtilities().GetNotice();
-                });
             }
         }
     }

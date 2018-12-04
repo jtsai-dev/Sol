@@ -26,7 +26,6 @@ using HtmlAgilityPack;
 using System.Web;
 using System.Reflection;
 using AutoMapper;
-using JT.Infrastructure.AppCommon;
 using System.Drawing;
 using System.Drawing.Imaging;
 using RabbitMQ.Client;
@@ -40,6 +39,8 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            string phone = "13450272034";
+            Console.WriteLine($"{phone.Substring(0, 3)}****{phone.Substring(4, 4)}");
             //MassTransitTTest();
             //RabbitMQProducerTest();
             //RabbitMQConsumerTest();

@@ -1,4 +1,3 @@
-using JT.Infrastructure.Log;
 using System;
 using System.IO;
 using System.Linq;
@@ -88,7 +87,9 @@ namespace JT.Infrastructure
         {
             return TryCatch<object>(() =>
             {
-                return _client.PostAsJsonAsync(requestUri, param).Result;
+                return _client.PostAsync(
+                    requestUri,
+                    new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(param))).Result;
             });
         }
 
@@ -96,7 +97,9 @@ namespace JT.Infrastructure
         {
             return TryCatch<T>(() =>
             {
-                return _client.PostAsJsonAsync(requestUri, param).Result;
+                return _client.PostAsync(
+                    requestUri,
+                    new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(param))).Result;
             });
         }
 
@@ -136,7 +139,8 @@ namespace JT.Infrastructure
         {
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return response.Content.ReadAsAsync<ApiResult<T>>().Result;
+                //return response.Content.ReadAsAsync<ApiResult<T>>().Result;
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<ApiResult<T>>(response.Content.ReadAsStringAsync().Result);
             }
             else
             {
@@ -151,7 +155,7 @@ namespace JT.Infrastructure
         //private ApiResult<object> ApiResultHandler(HttpResponseMessage response)
         //{
         //    return ApiResultHandler<object>(response);
-            
+
         //    //if (response.StatusCode == System.Net.HttpStatusCode.OK)
         //    //{
         //    //    return response.Content.ReadAsAsync<ApiResult>().Result;
@@ -218,7 +222,7 @@ namespace JT.Infrastructure
             }
             catch (AggregateException ex)
             {
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 return new ApiResult<T>()
                 {
                     IsSuccess = false,
@@ -227,7 +231,7 @@ namespace JT.Infrastructure
             }
             catch (Exception ex)
             {
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 return new ApiResult<T>()
                 {
                     IsSuccess = false,

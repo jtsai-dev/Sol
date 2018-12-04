@@ -1,5 +1,4 @@
-﻿using JT.Infrastructure.Log;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace JT.Infrastructure.Timer
@@ -69,7 +68,7 @@ namespace JT.Infrastructure.Timer
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 Exception = ex;
                 this.isTimeout = true;
             }

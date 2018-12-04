@@ -1,13 +1,10 @@
-﻿using JT.Infrastructure.Log;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace JT.Infrastructure
 {
@@ -74,14 +71,13 @@ namespace JT.Infrastructure
             }
             catch (Exception ex)
             {
-                Logger.Error(string.Format("save image from url({0}) error: {1}", url, ex.Message));
                 if (isThrowException)
                     throw ex;
                 else
                     return "";
             }
         }
-        
+
         private static string GetImageExtension(System.Drawing.Image image)
         {
             string strImgFormat = "";
@@ -102,7 +98,6 @@ namespace JT.Infrastructure
                 strImgFormat = ".wmf";
             else
             {
-                Logger.Error("Unknow Image Format");
                 throw new FormatException();
             }
 
@@ -199,7 +194,6 @@ namespace JT.Infrastructure
                     }
                     catch (System.Exception ex)
                     {
-                        Logger.Error("save file from url error: " + ex.Message);
                         throw ex;
                     }
                     finally
