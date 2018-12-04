@@ -1,0 +1,28 @@
+﻿[
+  {
+    "name": "DoubanRent",
+    "description": "豆瓣宝安租房",
+    "targetUrl": "https://www.douban.com/group/512844",
+    "group": "DoubanRentGroup",
+    "service": "CommonSpider.Jobs.Rent.Services.DoubanRentService",
+    "triggers": [
+      "0/5 0/5 * * * ?"
+    ],
+    "data": {
+      "keys": "两房|2房|两室|2室"
+    }
+  },
+  {
+    "name": "SZWater",
+    "description": "深圳水务局停水通知",
+    "targetUrl": "http://www.sz-water.com.cn/Announcement.aspx?nc=101034004",
+    "group": "SZWaterGroup",
+    "service": "CommonSpider.Jobs.SZWater.Services.SZWaterService",
+    "triggers": [
+      "0 30 8,18 * * ?"
+    ],
+    "data": {
+      "detailUrl": "http://www.sz-water.com.cn/newsdetails.aspx?nc=101034004&id={0}"
+    }
+  }
+]
