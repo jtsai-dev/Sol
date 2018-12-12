@@ -24,5 +24,18 @@
     "data": {
       "detailUrl": "http://www.sz-water.com.cn/newsdetails.aspx?nc=101034004&id={0}"
     }
+  },
+  {
+    "name": "Rent58",
+    "description": "58租房",
+    "targetUrl": "https://sz.58.com/zufang/0/pn1/",
+    "group": "Rent58",
+    "service": "CommonSpider.Jobs.Rent58.Services.Rent58Service",
+    "triggers": [
+      "0 0/1 * * * ?"
+    ],
+    "data": {
+      
+    }
   }
 ]
