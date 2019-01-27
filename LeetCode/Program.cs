@@ -28,7 +28,17 @@ namespace LeetCode
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
         }
-        
+
+        // 28
+        public static int StrStr(string haystack, string needle)
+        {
+            if (haystack == needle || string.IsNullOrEmpty(needle))
+                return 0;
+            var arr = haystack.Split(needle);
+            if (arr.Length > 1)
+                return arr[0].Length;
+            return -1;
+        }
 
         // 67--
         public static string AddBinary(string a, string b)

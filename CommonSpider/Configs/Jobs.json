@@ -32,7 +32,7 @@
     "group": "Rent58",
     "service": "CommonSpider.Jobs.Rent58.Services.Rent58Service",
     "triggers": [
-      "0 0/1 * * * ?"
+      "0/30 * * * * ?"
     ],
     "data": {
       

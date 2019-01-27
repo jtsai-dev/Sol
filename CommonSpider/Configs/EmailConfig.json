@@ -1,7 +1,7 @@
 ﻿{
   "host": "smtp.qq.com",
-  "userName": "1396252309@qq.com",
-  "password": "123asD",
-  "from": "1396252309@qq.com",
-  "to": [ "1396252309@qq.com" ]
+  "userName": "100@qq.com",
+  "password": "100",
+  "from": "100@qq.com",
+  "to": [ "100@qq.com" ]
 }

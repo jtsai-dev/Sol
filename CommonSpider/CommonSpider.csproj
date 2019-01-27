@@ -7,11 +7,15 @@
 
   <ItemGroup>
     <None Remove="Configs\EmailConfig.json" />
+    <None Remove="Configs\EmailConfig_1.json" />
     <None Remove="Configs\Jobs.json" />
     <None Remove="Configs\log4net.config" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Configs\EmailConfig_1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Configs\EmailConfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
