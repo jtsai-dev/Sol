@@ -20,15 +20,9 @@ namespace CommonSpider
 
         public bool Start(HostControl hostControl)
         {
-            try
-            {
-                _logger.Info("service start");
-                InitSchedulerJob();
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
+            _logger.Info("service start");
+            InitSchedulerJob();
+
             return true;
         }
 
@@ -53,6 +47,7 @@ namespace CommonSpider
             _jobs.ForEach(p =>
             {
                 var dataMap = new JobDataMap();
+                dataMap.Add("Name", p.Name);
                 dataMap.Add("TargetUrl", p.TargetUrl);
                 dataMap.Add("Service", p.Service);
                 dataMap.Add("Data", p.Data);

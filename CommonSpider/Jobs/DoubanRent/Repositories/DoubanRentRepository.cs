@@ -2,28 +2,27 @@
 using Dapper;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs.DoubanRent.Repositories
 {
     public class DoubanRentRepository : BaseRepository
     {
-        public bool Insert(DoubanRentSummary rentSummary)
+        public async Task<bool> InsertAsync(DoubanRentSummary rentSummary)
         {
             using (IDbConnection conn = OpenConnection())
             {
                 const string query = "INSERT INTO rentsummary(Id, Title, Author, Url) VALUES(@id, @title, @author, @url)";
-                int row = conn.Execute(query, rentSummary);
-                return row > 0;
+                return await conn.ExecuteAsync(query, rentSummary) > 0;
             }
         }
 
-        public DoubanRentSummary Query(int id)
+        public async Task<DoubanRentSummary> QueryAsync(int id)
         {
             using (IDbConnection conn = OpenConnection())
             {
-                const string query = "SELECT * FROM RentSummary WHERE Id = @id";
-                var rentSummary = conn.Query<DoubanRentSummary>(query, new { id = id }).FirstOrDefault();
-                return rentSummary;
+                const string query = "SELECT * FROM RentSummary WHERE Id = @id LIMIT 1;";
+                return await conn.QueryFirstAsync<DoubanRentSummary>(query, new { id = id });
             }
         }
     }

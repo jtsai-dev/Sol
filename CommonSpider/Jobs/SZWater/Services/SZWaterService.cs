@@ -1,4 +1,4 @@
-﻿using CommonSpider.Common;
+﻿using CommonSpider.Common.Sender;
 using CommonSpider.Interfaces;
 using CommonSpider.Jobs.SZWater.Entities;
 using CommonSpider.Jobs.SZWater.Repositories;
@@ -7,9 +7,9 @@ using log4net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs.SZWater.Services
 {
@@ -21,7 +21,7 @@ namespace CommonSpider.Jobs.SZWater.Services
         private static string _detailUrl;
         private static SZWaterRepository _szWaterRepository = new SZWaterRepository();
 
-        public void Init(string targetUrl, Dictionary<string, object> data)
+        public async Task ExcuteAsync(string name, string targetUrl, Dictionary<string, object> data)
         {
             _logger = LogManager.GetLogger(typeof(SZWaterService));
             _data = data;
@@ -29,26 +29,34 @@ namespace CommonSpider.Jobs.SZWater.Services
 
             List<Notice> notices = new List<Notice>();
             var ids = GetList(targetUrl);
-            ids.ForEach(id =>
+            ids.ForEach(async id =>
             {
-                var exist = _szWaterRepository.Query(id) == null;
+                var exist = await _szWaterRepository.QueryAsync(id) == null;
                 if (!exist)
                 {
                     var notice = GetDetail(id);
-                    _szWaterRepository.Insert(notice);
+                    await _szWaterRepository.InsertAsync(notice);
                     notices.Add(notice);
                 }
             });
 
             if (notices.Count > 0)
             {
-                SendNotices(notices);
+                string subject = $"{name}-{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}";
+                string message = GenerateMessage(notices);
+                try
+                {
+                    EmailSender.Send(subject, message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
             }
         }
 
-        private void SendNotices(List<Notice> notices)
+        private string GenerateMessage(List<Notice> notices)
         {
-            string subject = string.Format("停水通知-{0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sb = new StringBuilder();
             foreach (var notice in notices)
             {
@@ -62,17 +70,10 @@ namespace CommonSpider.Jobs.SZWater.Services
                 sb.AppendLine();
             }
             sb.AppendFormat("抓取时间: {0}", DateTime.Now.ToString("yyyy-MM-dd"));
-            try
-            {
-                EmailHelper.Send(subject, sb.ToString());
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
+            return sb.ToString();
         }
 
-        private static List<string> GetList(string targetUrl)
+        private List<string> GetList(string targetUrl)
         {
             List<string> ids = new List<string>();
 
@@ -93,7 +94,7 @@ namespace CommonSpider.Jobs.SZWater.Services
             return ids;
         }
 
-        private static Notice GetDetail(string id)
+        private Notice GetDetail(string id)
         {
             Notice notice = new Notice();
 

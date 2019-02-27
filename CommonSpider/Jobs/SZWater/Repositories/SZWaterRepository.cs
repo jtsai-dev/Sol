@@ -2,28 +2,27 @@
 using Dapper;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs.SZWater.Repositories
 {
-    public class SZWaterRepository: BaseRepository
+    public class SZWaterRepository : BaseRepository
     {
-        public bool Insert(Notice notice)
+        public async Task<bool> InsertAsync(Notice notice)
         {
             using (IDbConnection conn = OpenConnection())
             {
                 const string query = "INSERT INTO Notice([Id], [Title], [PublishDate], [Content], [Url]) VALUES(@id, @title, @publishDate, @content, @url)";
-                int row = conn.Execute(query, notice);
-                return row > 0;
+                return await conn.ExecuteAsync(query, notice) > 0;
             }
         }
 
-        public Notice Query(string id)
+        public async Task<Notice> QueryAsync(string id)
         {
             using (IDbConnection conn = OpenConnection())
             {
                 const string query = "SELECT * from [Notice] WHERE Id = @id";
-                var notice = conn.Query<Notice>(query, new { id = id }).FirstOrDefault();
-                return notice;
+                return await conn.QueryFirstAsync<Notice>(query, new { id = id });
             }
         }
     }

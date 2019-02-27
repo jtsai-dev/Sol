@@ -28,14 +28,14 @@
   {
     "name": "Rent58",
     "description": "58租房",
-    "targetUrl": "https://sz.58.com/zufang/0/pn1/",
+    "targetUrl": "https://sz.58.com/nanshan/zufang/0/",
     "group": "Rent58",
     "service": "CommonSpider.Jobs.Rent58.Services.Rent58Service",
     "triggers": [
-      "0/30 * * * * ?"
+      "0 0/1 * * * ?"
     ],
     "data": {
-      
+
     }
   }
 ]

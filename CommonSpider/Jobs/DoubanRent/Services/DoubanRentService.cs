@@ -1,4 +1,4 @@
-﻿using CommonSpider.Common;
+﻿using CommonSpider.Common.Sender;
 using CommonSpider.Interfaces;
 using CommonSpider.Jobs.DoubanRent.Entities;
 using CommonSpider.Jobs.DoubanRent.Repositories;
@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs.DoubanRent.Services
 {
@@ -19,19 +20,28 @@ namespace CommonSpider.Jobs.DoubanRent.Services
         private static string[] _keys;
         private static DoubanRentRepository _rentSummaryRepository = new DoubanRentRepository();
 
-        public void Init(string targetUrl, Dictionary<string, object> data)
+        public async Task ExcuteAsync(string name, string targetUrl, Dictionary<string, object> data)
         {
             _logger = LogManager.GetLogger(typeof(DoubanRentService));
             _data = data;
             _keys = _data["keys"].ToString().Split('|');
-            var list = GetList(targetUrl);
+            var list = await GetList(targetUrl);
             if (list.Count > 0)
             {
-                SendNotice(list);
+                string subject = $"{name}-{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}";
+                string message = GenerateMessage(list);
+                try
+                {
+                    EmailSender.Send(subject, message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
             }
         }
 
-        private void SendNotice(List<DoubanRentSummary> rentSummarys)
+        private string GenerateMessage(List<DoubanRentSummary> rentSummarys)
         {
             string subject = string.Format("租房列表-{0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sb = new StringBuilder();
@@ -41,18 +51,10 @@ namespace CommonSpider.Jobs.DoubanRent.Services
                 sb.AppendLine();
             }
             sb.AppendFormat("抓取时间: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-            try
-            {
-                EmailHelper.Send(subject, sb.ToString());
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
+            return sb.ToString();
         }
-        
-        private static List<DoubanRentSummary> GetList(string targetUrl)
+
+        private async Task<List<DoubanRentSummary>> GetList(string targetUrl)
         {
             List<DoubanRentSummary> items = new List<DoubanRentSummary>();
 
@@ -73,7 +75,7 @@ namespace CommonSpider.Jobs.DoubanRent.Services
                         var author = tds[1].InnerText.Replace("\\", "");
                         var url = titleNode?.Attributes["href"]?.Value.TrimEnd('/');
                         var id = Convert.ToInt32(url.Substring(url.LastIndexOf('/') + 1));
-                        if (_rentSummaryRepository.Query(id) == null)
+                        if (await _rentSummaryRepository.QueryAsync(id) == null)
                         {
                             var rentSummary = new DoubanRentSummary()
                             {
@@ -83,7 +85,7 @@ namespace CommonSpider.Jobs.DoubanRent.Services
                                 Author = author,
                             };
                             items.Add(rentSummary);
-                            _rentSummaryRepository.Insert(rentSummary);
+                            await _rentSummaryRepository.InsertAsync(rentSummary);
                         }
                     }
                 }

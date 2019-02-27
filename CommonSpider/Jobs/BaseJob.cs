@@ -10,13 +10,14 @@ namespace CommonSpider.Jobs
     {
         Task IJob.Execute(IJobExecutionContext context)
         {
+            var name = GetJobDataMap(context, "Name").ToString();
             var targetUrl = GetJobDataMap(context, "TargetUrl").ToString();
             var type = Type.GetType(context.JobDetail.JobDataMap["Service"].ToString());
             var data = context.JobDetail.JobDataMap["Data"] as Dictionary<string, object>;
             IService service = (IService)Activator.CreateInstance(type);
-            return Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(async () =>
             {
-                service.Init(targetUrl, data);
+                await service.ExcuteAsync(name, targetUrl, data);
             });
         }
 

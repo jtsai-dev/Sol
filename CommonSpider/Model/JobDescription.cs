@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CommonSpider.Model
 {
-    class JobDescription
+    public class JobDescription
     {
         public string Name { get; set; }
         public string Description{get;set;}
@@ -13,5 +13,6 @@ namespace CommonSpider.Model
         public string Service { get; set; }
         public List<string> Triggers { get; set; }
         public Dictionary<string, object> Data { get; set; }
+        public bool InDebug { get; set; }
     }
 }

@@ -8,6 +8,16 @@ namespace LeetCode
     {
         static void Main(string[] args)
         {
+            var origin = new int[,] { { 1, 2 }, { 3, 4 } };
+            MatrixReshape(origin, 1, 4);
+            //var l1 = new ListNode(1) { next = new ListNode(2) { next = new ListNode(6) { next = new ListNode(3) { next = new ListNode(4) { next = new ListNode(5) { next = new ListNode(6) } } } } } };
+            //RemoveElements(l1, 6);
+
+            //var l1 = new ListNode(1) { next = new ListNode(2) { next = new ListNode(4) } };
+            //var l2 = new ListNode(1) { next = new ListNode(3) { next = new ListNode(4) } };
+            //var t = MergeTwoLists(l1, l2);
+
+
             //NextPermutation(new int[] { 3, 2, 1 });
             //var tree = new TreeNode(3) { left = new TreeNode(9), right = new TreeNode(20) { left = new TreeNode(15), right = new TreeNode(7) } };
             //var tree = new TreeNode(4)
@@ -28,6 +38,84 @@ namespace LeetCode
             //FullJustify(new string[] { "This", "is", "an", "example", "of", "text", "justification." }, 16);
             //FullJustify(new string[] { "Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer.", "Art", "is", "everything", "else", "we", "do" }, 20);
         }
+
+        public static int[,] MatrixReshape(int[,] nums, int r, int c)
+        {
+            var result = new int[r, c];
+            var i = 0;
+            var j = 0;
+            foreach (var row in nums)
+            {
+                result[j, i] = row;
+                if (i < r-1)
+                {
+                    i++;
+                }
+                else
+                {
+                    i = 0;
+                    j++;
+                }
+            }
+            return result;
+        }
+
+        // 
+        public static int[] SortedSquares(int[] A)
+        {
+            var nums = new List<int>();
+            foreach (var num in A)
+            {
+                nums.Add(num * num);
+            }
+            nums.Sort();
+            return nums.ToArray();
+        }
+
+        // 
+        public static ListNode RemoveElements(ListNode head, int val)
+        {
+            var result = new ListNode(0);
+            var cur = result;
+            var next = head;
+            while (next != null)
+            {
+                if (next.val != val)
+                {
+                    cur.next = new ListNode(next.val);
+                    cur = cur.next;
+                }
+                next = next.next;
+            }
+
+            return result;
+        }
+
+        public static ListNode MergeTwoLists(ListNode l1, ListNode l2)
+        {
+            var next1 = l1;
+            var next2 = l2;
+            ListNode result = new ListNode(0);
+            var cur = result;
+            while (next1 != null && next2 != null)
+            {
+                if (next1.val < next2.val)
+                {
+                    cur.next = new ListNode(next1.val);
+                    next1 = next1.next;
+                }
+                else
+                {
+                    cur.next = new ListNode(next2.val);
+                    next2 = next2.next;
+                }
+                cur = cur.next;
+            }
+            cur.next = next1 == null ? next2 : next1;
+
+            return result.next;
+        }
+
 
         // 28
         public static int StrStr(string haystack, string needle)

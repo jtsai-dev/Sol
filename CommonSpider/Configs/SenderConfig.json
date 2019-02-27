@@ -1,0 +1,13 @@
+﻿{
+  "email": {
+    "host": "smtp.qq.com",
+    "userName": "",
+    "password": "",
+    "from": "",
+    "to": [ "" ]
+  },
+  "ftqq": {
+    "key": "",
+    "url": "https://sc.ftqq.com/{0}.send"
+  }
+}

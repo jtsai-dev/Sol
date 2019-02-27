@@ -1,7 +1,0 @@
-﻿{
-  "host": "smtp.qq.com",
-  "userName": "100@qq.com",
-  "password": "100",
-  "from": "100@qq.com",
-  "to": [ "100@qq.com" ]
-}

@@ -4,6 +4,11 @@ using System.Text;
 
 namespace CommonSpider.Model
 {
+    public class SenderConfig
+    {
+        public EmailConfig Email { get; set; }
+        public FtqqConfig Ftqq { get; set; }
+    }
     public class EmailConfig
     {
         public string Host { get; set; }
@@ -12,4 +17,10 @@ namespace CommonSpider.Model
         public string From { get; set; }
         public string[] To { get; set; }
     }
+    public class FtqqConfig
+    {
+        public string Key { get; set; }
+        public string Url { get; set; }
+    }
+         
 }

@@ -1,4 +1,4 @@
-﻿using CommonSpider.Common;
+﻿using CommonSpider.Common.Sender;
 using CommonSpider.Interfaces;
 using CommonSpider.Jobs.Rent58.Entities;
 using CommonSpider.Jobs.Rent58.Repositories;
@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CommonSpider.Jobs.Rent58.Services
 {
@@ -22,7 +23,7 @@ namespace CommonSpider.Jobs.Rent58.Services
         private static Rent58Repository _szWaterRepository = new Rent58Repository();
 
         // todo: 重新构建
-        public void Init(string targetUrl, Dictionary<string, object> data)
+        public async Task ExcuteAsync(string name, string targetUrl, Dictionary<string, object> data)
         {
             _logger = LogManager.GetLogger(typeof(Rent58Service));
             _data = data;
@@ -30,26 +31,34 @@ namespace CommonSpider.Jobs.Rent58.Services
 
             List<Rent58Item> items = new List<Rent58Item>();
             var ids = GetList(targetUrl);
-            ids.ForEach(id =>
+            ids.ForEach(async id =>
             {
-                var exist = _szWaterRepository.Query(id) == null;
+                var exist = await _szWaterRepository.QueryAsync(id) == null;
                 if (!exist)
                 {
                     var notice = GetDetail(id);
-                    _szWaterRepository.Insert(notice);
+                    await _szWaterRepository.InsertAsync(notice);
                     items.Add(notice);
                 }
             });
 
             if (items.Count > 0)
             {
-                SendNotices(items);
+                string subject = $"{name}-{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}";
+                string message = GenerateMessage(items);
+                try
+                {
+                    EmailSender.Send(subject, message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex);
+                }
             }
         }
 
-        private void SendNotices(List<Rent58Item> notices)
+        private string GenerateMessage(List<Rent58Item> notices)
         {
-            string subject = string.Format("58租房-{0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sb = new StringBuilder();
             foreach (var notice in notices)
             {
@@ -64,14 +73,7 @@ namespace CommonSpider.Jobs.Rent58.Services
             }
             sb.AppendFormat("抓取时间: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
-            try
-            {
-                EmailHelper.Send(subject, sb.ToString());
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-            }
+            return sb.ToString();
         }
 
         // todo: 重新构建
@@ -84,8 +86,8 @@ namespace CommonSpider.Jobs.Rent58.Services
             foreach (var li in items)
             {
                 var titleContainer = li.SelectSingleNode(".//h2");
-                var title = titleContainer.InnerText;
-                var link = $"https://{titleContainer.SelectSingleNode(".//a[@href]").Attributes["href"]}";
+                var title = titleContainer.InnerText?.Trim();
+                var link = $"https://{titleContainer.SelectSingleNode(".//a[@href][contains(@class, 'strongbox')]").Attributes["href"]}";
 
 
                 //var href = li.SelectSingleNode(".//div");

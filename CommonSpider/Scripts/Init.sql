@@ -1,14 +1,4 @@
-﻿---- SQLite
---CREATE TABLE "main"."Notice" (
---  "Id" varchar(16) NOT NULL,
---  "Title" varchar(32),
---  "PublishDate" datetime,
---  "Content" text,
---  "Url" varchar(256),
---  PRIMARY KEY ("Id")
---);
-
--- MySQL
+﻿-- MySQL
 -- SZWater
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

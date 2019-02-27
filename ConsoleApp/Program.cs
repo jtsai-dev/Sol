@@ -39,6 +39,11 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            string key = "SCU39635Tfe3ad03ea2e0c3bdbf8d91fd36e732175c384ace15710";
+            string url = $"https://sc.ftqq.com/{key}.send";
+            var client = new EasyHttp.Http.HttpClient();
+            var response = client.Get(url, new { text = "http://baidu.com", desp = "https://cn.bing.com" });
+
             //MassTransitTTest();
             //RabbitMQProducerTest();
             //RabbitMQConsumerTest();
