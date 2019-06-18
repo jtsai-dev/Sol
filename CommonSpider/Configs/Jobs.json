@@ -1,8 +1,8 @@
 ﻿[
   {
     "name": "DoubanRent",
-    "description": "豆瓣宝安租房",
-    "targetUrl": "https://www.douban.com/group/512844",
+    "description": "豆瓣南山租房",
+    "targetUrl": "https://www.douban.com/group/nanshanzufang/",
     "group": "DoubanRentGroup",
     "service": "CommonSpider.Jobs.DoubanRent.Services.DoubanRentService",
     "triggers": [
@@ -10,7 +10,8 @@
     ],
     "data": {
       "keys": "两房|2房|两室|2室"
-    }
+    },
+    "InDebug": true
   },
   {
     "name": "SZWater",

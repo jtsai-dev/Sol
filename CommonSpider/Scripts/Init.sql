@@ -19,7 +19,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `DoubanRentSummary`;
 CREATE TABLE `DoubanRentSummary`  (
   `Id` int(8) NOT NULL,
-  `Title` varchar(32),
+  `Title` varchar(128),
   `Author` varchar(32),
   `Url` varchar(256),
   PRIMARY KEY (`Id`) USING BTREE

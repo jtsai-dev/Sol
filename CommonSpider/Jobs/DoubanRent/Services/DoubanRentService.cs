@@ -75,7 +75,8 @@ namespace CommonSpider.Jobs.DoubanRent.Services
                         var author = tds[1].InnerText.Replace("\\", "");
                         var url = titleNode?.Attributes["href"]?.Value.TrimEnd('/');
                         var id = Convert.ToInt32(url.Substring(url.LastIndexOf('/') + 1));
-                        if (await _rentSummaryRepository.QueryAsync(id) == null)
+                        var record = await _rentSummaryRepository.QueryAsync(id);
+                        if (record == null)
                         {
                             var rentSummary = new DoubanRentSummary()
                             {

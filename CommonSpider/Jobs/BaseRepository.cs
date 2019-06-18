@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using System;
 using System.Configuration;
 using System.Data;
 
@@ -9,13 +10,20 @@ namespace CommonSpider.Jobs
         private static MySqlConnection _connection;
         public static MySqlConnection OpenConnection()
         {
-            if (_connection == null)
+            try
             {
-                _connection = new MySqlConnection(ConfigurationManager.AppSettings.Get("ConnectionString"));
+                if (_connection == null)
+                {
+                    _connection = new MySqlConnection(ConfigurationManager.AppSettings.Get("ConnectionString"));
+                }
+                if (_connection.State == ConnectionState.Closed)
+                    _connection.Open();
+                return _connection;
             }
-            if (_connection.State == ConnectionState.Closed)
-                _connection.Open();
-            return _connection;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
